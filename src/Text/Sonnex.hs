@@ -102,6 +102,7 @@ sonx ('a':'i':'n':v:cs) s
     | otherwise = sonx (v:cs) (s ++ "1")
 sonx "ais" s = s ++ "é"
 sonx ('a':'i':'s':v:cs) s
+    | v == 's'  = sonx cs (s ++ "és")
     | isVowel v = sonx (v:cs) (s ++ "éz")
     | otherwise = sonx (v:cs) (s ++ "és")
 sonx "ail" s = s ++ "ai"
@@ -116,8 +117,8 @@ sonx ('a':'n':'n':cs) s = sonx cs (s ++ "an")
 sonx ('a':'n':c:cs) s
     | isVowel c = sonx (c:cs) (s ++ "an")
     | otherwise = sonx (c:cs) (s ++ "2")
-sonx ('a':'s':'s':cs) s = sonx cs (s ++ "as")
 sonx ('a':'s':c:cs) s
+    | c == 's'   = sonx cs (s ++ "as")
     | isConson c = sonx (c:cs) (s ++ "as")
     | otherwise  = sonx (c:cs) (s ++ "az")
 sonx ('a':'u':cs) s = sonx cs (s ++ "o")
@@ -134,7 +135,10 @@ sonx ('b':'b':cs) s = sonx cs (s ++ "b")
 -- Starting with 'c'
 sonx "c" s = s
 sonx ('c':'a':cs) s = sonx ('a':cs) (s ++ "k")
-sonx ('c':'c':cs) s = sonx cs (s ++ "ks")
+sonx ('c':'c':v:cs) s
+    | v == 'o'  = sonx ('o':cs) (s ++ "k")
+    | v == 'u'  = sonx ('u':cs) (s ++ "k")
+    | otherwise = sonx cs (s ++ "ks")
 sonx ('c':'e':cs) s = sonx ('e':cs) (s ++ "s")
 sonx ('c':'\'':cs) s = sonx cs (s ++ "s")
 sonx ('c':'h':'a':'o':cs) s = sonx ('a':'o':cs) (s ++ "k")
@@ -249,6 +253,7 @@ sonx ('i':'n':c:cs) s
     | isVowel c = sonx (c:cs) (s ++ "in")
     | otherwise = sonx (c:cs) (s ++ "1")
 sonx ('i':'s':c:cs) s
+    | c == 's'   = sonx cs (s ++ "is")
     | isConson c = sonx (c:cs) (s ++ "is")
     | otherwise  = sonx (c:cs) (s ++ "iz")
 sonx ('i':'x':'i':cs) s = sonx ('i':cs) (s ++ "iz")
@@ -281,7 +286,8 @@ sonx ('o':'m':c:cs) s
 sonx ('o':'n':'n':cs) s = sonx cs (s ++ "on")
 sonx ('o':'n':cs) s = sonx cs (s ++ "3")
 sonx ('o':'s':c:cs) s
-    | isConson c = sonx cs (s ++ "os")
+    | c == 's'   = sonx cs (s ++ "os")
+    | isConson c = sonx (c:cs) (s ++ "os")
     | otherwise  = sonx (c:cs) (s ++ "oz")
 sonx ('o':'u':cs) s = sonx cs (s ++ "U")
 sonx ('o':'ù':cs) s = sonx cs (s ++ "U")
@@ -316,6 +322,10 @@ sonx ('t':'t':cs) s = sonx cs (s ++ "t")
 -- Starting with 'u'
 sonx "un" s = s ++ "1"
 sonx ('û':cs) s = sonx cs (s ++ "u")
+sonx ('u':'s':c:cs) s
+    | c == 's'   = sonx cs (s ++ "us")
+    | isConson c = sonx (c:cs) (s ++ "us")
+    | otherwise  = sonx (c:cs) (s ++ "uz")
 
 -- Starting with 'v'
 -- 'v' can be handled by the generic case since there is no special thing

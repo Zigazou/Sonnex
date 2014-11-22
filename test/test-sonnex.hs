@@ -16,12 +16,13 @@
 
 module Main where
 
+import Control.Monad
 import Text.Sonnex
 
 -- | You can use this file to test the Sonnex functions
 -- You can use it like this:
 --     cat test-sonnex-homonymes | runhaskell test-sonnex.hs
-main = interact (sonnexRows . lines)
-    where sonnexRows = foldl (\a c -> a ++ showSonnex c ++ "\n") ""
-          showSonnex c = c ++ " -> " ++ sonnexPhrase c
+main = forever $ do
+    line <- getLine
+    putStrLn (line ++ " → " ++ sonnexPhrase line)
 

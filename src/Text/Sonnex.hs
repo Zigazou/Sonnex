@@ -1,18 +1,75 @@
---- Sonnex, an alternative to Soundex for french language
---- Copyright (C) 2014 Frédéric BISSON
+{-|
+Module      : Sonnex
+Description : Sonnex is an alternative to Soundex for french language
+Copyright   : © 2014 Frédéric BISSON
+License     : GPL-3
+Maintainer  : zigazou@free.fr
+Stability   : alpha
+Portability : POSIX
 
---- This program is free software: you can redistribute it and/or modify
---- it under the terms of the GNU General Public License as published by
---- the Free Software Foundation, either version 3 of the License, or
---- (at your option) any later version.
+This package computes Sonnex codes for french words or phrases. It is an
+alternative to the Soundex algorithm for french language.
 
---- This program is distributed in the hope that it will be useful,
---- but WITHOUT ANY WARRANTY; without even the implied warranty of
---- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
---- GNU General Public License for more details.
+= Characters of the Sonnex code
 
---- You should have received a copy of the GNU General Public License
---- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+The Sonnex code contains the following characters:
+
+- 1 ← un, ein, in, ain
+- 2 ← en, an
+- 3 ← on
+- a ← a, à, â
+- b ← b, bb
+- C ← ch
+- d ← d, dd
+- e ← e, eu
+- é ← ê, é, è, ai, ei
+- f ← f, ff, ph
+- g ← gu
+- i ← î, i, ille
+- j ← j, ge
+- k ← k, c, qu, ck
+- l ← l, ll
+- m ← m, mm
+- n ← n, nn
+- o ← o, ô
+- p ← p, pp
+- r ← r, rr
+- s ← s, ss
+- t ← t, tt
+- u ← u, ù, û
+- v ← v, w
+- z ← z, s
+- U ← ou
+
+The apostroph is ignored, every other character not understood by the Sonnex
+algorthim is copied without changes.
+
+= Examples
+
+Here are a few examples of sonnex results:
+
+>>> sonnex "champ"
+C2
+
+>>> sonnex "chant"
+C2
+
+>>> sonnex "boulot"
+bUlo
+
+>>> sonnex "bouleau"
+bUlo
+
+>>> sonnex "compte"
+k3t
+
+>>> sonnex "comte"
+k3t
+
+>>> sonnex "conte"
+k3t
+
+-}
 
 module Text.Sonnex (sonnex, sonnexPhrase) where
 
@@ -286,35 +343,9 @@ sonx (c:cs) s = sonx cs (s ++ [c])
 -- | Compute a Sonnex code for a french word.
 --
 -- The string must contain only one word.
--- The Sonnex code contains the following characters:
---     1 = un, ein, in, ain
---     2 = en, an
---     3 = on
---     a = a, à, â
---     b = b, bb
---     C = ch
---     d = d, dd
---     e = e, eu
---     é = ê, é, è, ai, ei
---     f = f, ff, ph
---     g = gu
---     i = î, i, ille
---     j = j, ge
---     k = k, c, qu, ck
---     l = l, ll
---     m = m, mm
---     n = n, nn
---     o = o, ô
---     p = p, pp
---     r = r, rr
---     s = s, ss
---     t = t, tt
---     u = u, ù, û
---     v = v, w
---     z = z, s
---     U = ou
+-- Each character should be considered as being vocal, not silent
 --
--- Each character should be considered as being vocal/not silent
+-- prop> length (sonnex w) <= length w
 sonnex :: String -> String
 sonnex word = sonx (map toLower word) ""
 

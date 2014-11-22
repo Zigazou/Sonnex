@@ -86,269 +86,271 @@ isConson = (`elem` "bcçdfghjklmnpqrstvwxyz")
 -- | Internal function computing a Sonnex code for a french word.
 --
 -- It requires its entry to be converted to lower case before being called.
-sonx :: String -> String -> String
+sonx :: String -> String
 -- End of recursive calls
-sonx "" s = s
+sonx "" = ""
 
 -- Apostroph is ignored/silent
-sonx ('\'':cs) s = sonx cs s
+sonx ('\'':cs) = sonx cs
 
 -- Starting with 'a'
-sonx "a" s = s ++ "a"
-sonx "aient" s = s ++ "é"
-sonx "ain" s = s ++ "1"
-sonx ('a':'i':'n':v:cs) s
-    | isVowel v = sonx (v:cs) (s ++ "é")
-    | otherwise = sonx (v:cs) (s ++ "1")
-sonx "ais" s = s ++ "é"
-sonx ('a':'i':'s':v:cs) s
-    | v == 's'  = sonx cs (s ++ "és")
-    | isVowel v = sonx (v:cs) (s ++ "éz")
-    | otherwise = sonx (v:cs) (s ++ "és")
-sonx "ail" s = s ++ "ai"
-sonx ('a':'i':'l':'l':cs) s = sonx cs (s ++ "ai")
-sonx ('a':'i':cs) s = sonx cs (s ++ "é")
-sonx ('a':'m':'m':cs) s = sonx cs (s ++ "am")
-sonx ('a':'m':c:cs) s
-    | isVowel c = sonx (c:cs) (s ++ "am")
-    | otherwise = sonx (c:cs) (s ++ "2")
-sonx "an" s = s ++ "2"
-sonx ('a':'n':'n':cs) s = sonx cs (s ++ "an")
-sonx ('a':'n':c:cs) s
-    | isVowel c = sonx (c:cs) (s ++ "an")
-    | otherwise = sonx (c:cs) (s ++ "2")
-sonx ('a':'s':c:cs) s
-    | c == 's'   = sonx cs (s ++ "as")
-    | isConson c = sonx (c:cs) (s ++ "as")
-    | otherwise  = sonx (c:cs) (s ++ "az")
-sonx ('a':'u':cs) s = sonx cs (s ++ "o")
-sonx "ay" s = s ++ "é"
-sonx "ays" s = s ++ "é"
+sonx "a" = "a"
+sonx "aient" = "é"
+sonx "ain" = "1"
+sonx ('a':'i':'n':v:cs)
+    | isVowel v = 'é':sonx (v:cs)
+    | otherwise = '1':sonx (v:cs)
+sonx "ais" = "é"
+sonx ('a':'i':'s':v:cs)
+    | v == 's'  = 'é':'s':sonx cs
+    | isVowel v = 'é':'z':sonx (v:cs)
+    | otherwise = 'é':'s':sonx (v:cs)
+sonx "ail" = "ai"
+sonx ('a':'i':'l':'l':cs) = 'a':'i':sonx cs
+sonx ('a':'i':cs) = 'é':sonx cs
+sonx ('a':'m':'m':cs) = 'a':'m':sonx cs
+sonx ('a':'m':c:cs)
+    | c == 'm'  = 'a':'m':sonx cs
+    | isVowel c = 'a':'m':sonx (c:cs)
+    | otherwise = '2':sonx (c:cs)
+sonx "an" = "2"
+sonx ('a':'n':c:cs)
+    | c == 'n'  = 'a':'n':sonx cs
+    | isVowel c = 'a':'n':sonx (c:cs)
+    | otherwise = '2':sonx (c:cs)
+sonx ('a':'s':c:cs)
+    | c == 's'   = 'a':'s':sonx cs
+    | isConson c = 'a':'s':sonx (c:cs)
+    | otherwise  = 'a':'z':sonx (c:cs)
+sonx ('a':'u':cs) = 'o':sonx cs
+sonx "ay" = "é"
+sonx "ays" = "é"
 
-sonx ('à':cs) s = sonx cs (s ++ "a")
-sonx ('â':cs) s = sonx cs (s ++ "a")
+sonx ('à':cs) = 'a':sonx cs
+sonx ('â':cs) = 'a':sonx cs
 
 -- Starting with 'b'
-sonx "b" s = s
-sonx ('b':'b':cs) s = sonx cs (s ++ "b")
+sonx "b" = ""
+sonx ('b':'b':cs) = 'b':sonx cs
 
 -- Starting with 'c'
-sonx "c" s = s
-sonx ('c':'a':cs) s = sonx ('a':cs) (s ++ "k")
-sonx ('c':'c':v:cs) s
-    | v == 'o'  = sonx ('o':cs) (s ++ "k")
-    | v == 'u'  = sonx ('u':cs) (s ++ "k")
-    | otherwise = sonx cs (s ++ "ks")
-sonx ('c':'e':cs) s = sonx ('e':cs) (s ++ "s")
-sonx ('c':'\'':cs) s = sonx cs (s ++ "s")
-sonx ('c':'h':'a':'o':cs) s = sonx ('a':'o':cs) (s ++ "k")
-sonx ('c':'h':'l':cs) s = sonx cs (s ++ "kl")
-sonx ('c':'h':'o':'e':cs) s = sonx ('o':'e':cs) (s ++ "k")
-sonx ('c':'h':'œ':cs) s = sonx ('o':'e':cs) (s ++ "k")
-sonx ('c':'h':'r':cs) s = sonx cs (s ++ "kr")
-sonx ('c':'h':cs) s = sonx cs (s ++ "C")
-sonx ('c':'i':cs) s = sonx ('i':cs) (s ++ "s")
-sonx ('c':'k':cs) s = sonx cs (s ++ "k")
-sonx ('c':'o':'e':'u':cs) s = sonx ('o':'e':'u':cs) (s ++ "k")
-sonx ('c':'o':'m':'p':'t':cs) s = sonx cs (s ++ "k3t")
-sonx ('c':'œ':'u':cs) s = sonx ('œ':'u':cs) (s ++ "k")
-sonx ('c':'o':cs) s = sonx ('o':cs) (s ++ "k")
-sonx ('c':'u':'e':'i':cs) s = sonx ('i':cs) (s ++ "ke")
-sonx ('c':'u':cs) s = sonx ('u':cs) (s ++ "k")
-sonx ('c':'y':cs) s = sonx ('y':cs) (s ++ "s")
-sonx ('c':cs) s = sonx cs (s ++ "k")
+sonx "c" = ""
+sonx ('c':'a':cs) = 'k':sonx ('a':cs)
+sonx ('c':'c':v:cs)
+    | v == 'o'  = 'k':sonx ('o':cs)
+    | v == 'u'  = 'k':sonx ('u':cs)
+    | otherwise = 'k':'s':sonx cs
+sonx ('c':'e':cs) = 's':sonx ('e':cs)
+sonx ('c':'\'':cs) = 's':sonx cs
+sonx ('c':'h':'a':'o':cs) = 'k':sonx ('a':'o':cs)
+sonx ('c':'h':'l':cs) = 'k':'l':sonx cs
+sonx ('c':'h':'o':'e':cs) = 'k':sonx ('o':'e':cs)
+sonx ('c':'h':'œ':cs) = 'k':sonx ('o':'e':cs)
+sonx ('c':'h':'r':cs) = 'k':'r':sonx cs
+sonx ('c':'h':cs) = 'C':sonx cs
+sonx ('c':'i':cs) = 's':sonx ('i':cs)
+sonx ('c':'k':cs) = 'k':sonx cs
+sonx ('c':'o':'e':'u':cs) = 'k':sonx ('o':'e':'u':cs)
+sonx ('c':'o':'m':'p':'t':cs) = 'k':'3':'t':sonx cs
+sonx ('c':'œ':'u':cs) = 'k':sonx ('œ':'u':cs)
+sonx ('c':'o':cs) = 'k':sonx ('o':cs)
+sonx ('c':'u':'e':'i':cs) = 'k':'e':sonx ('i':cs)
+sonx ('c':'u':cs) = 'k':sonx ('u':cs)
+sonx ('c':'y':cs) = 's':sonx ('y':cs)
+sonx ('c':cs) = 'k':sonx cs
 
-sonx ('ç':cs) s = sonx cs (s ++ "s")
+sonx ('ç':cs) = 's':sonx cs
 
 -- Starting with 'd'
-sonx "d" s = s
-sonx "ds" s = s
-sonx ('d':'d':cs) s = sonx cs (s ++ "d")
+sonx "d" = ""
+sonx "ds" = ""
+sonx ('d':'d':cs) = 'd':sonx cs
 
 -- Starting with 'e'
-sonx "e" s = s
-sonx "ec" s = s ++ "éc"
-sonx "ef" s = s ++ "éf"
-sonx "eaux" s = s ++ "o"
-sonx ('e':'a':'n':'n':cs) s = sonx cs (s ++ "an")
-sonx ('e':'a':'n':cs) s = sonx cs (s ++ "2")
-sonx ('e':'a':'u':cs) s = sonx cs (s ++ "o")
-sonx ('e':'f':'f':cs) s = sonx cs (s ++ "éf")
-sonx "ein" s = s ++ "1"
-sonx ('e':'i':'n':c:cs) s
-    | isVowel c = sonx (c:cs) (s ++ "én")
-    | otherwise = sonx (c:cs) (s ++ "1")
-sonx ('e':'i':cs) s = sonx cs (s ++ "é")
-sonx ('e':'l':'l':cs) s = sonx cs (s ++ "él")
-sonx ('e':'l':c:cs) s
-    | isConson c = sonx ('l':c:cs) (s ++ "é")
-    | otherwise  = sonx ('l':c:cs) (s ++ "e")
-sonx ('e':'m':'m':cs) s = sonx cs (s ++ "ém")
-sonx ('e':'m':'p':cs) s = sonx cs (s ++ "2")
-sonx ('e':'n':'n':cs) s = sonx cs (s ++ "én")
-sonx "en" s = s ++ "2"
-sonx ('e':'n':c:cs) s
-    | isVowel c = sonx (c:cs) (s ++ "en")
-    | otherwise = sonx (c:cs) (s ++ "2")
-sonx "er" s = s ++ "é"
-sonx "ert" s = s ++ "ér"
-sonx ('e':'r':'r':cs) s = sonx cs (s ++ "ér")
-sonx ('e':'r':'f':cs) s = sonx ('f':cs) (s ++ "ér")
-sonx "es" s = s
-sonx ('e':'s':'c':'h':cs) s = sonx cs (s ++ "éC")
-sonx ('e':'s':'h':cs) s = sonx ('h':cs) (s ++ "é")
-sonx ('e':'s':'n':cs) s = sonx ('n':cs) (s ++ "é")
-sonx ('e':'s':'s':cs) s = sonx cs (s ++ "és")
-sonx ('e':'s':c:cs) s
-    | isConson c = sonx (c:cs) (s ++ "és")
-    | otherwise  = sonx (c:cs) (s ++ "ez")
-sonx ('é':'s':c:cs) s
-    | isConson c = sonx cs (s ++ "és")
-    | otherwise  = sonx (c:cs) (s ++ "éz")
-sonx ('e':'t':'t':cs) s = sonx cs (s ++ "ét")
-sonx "et" s = s ++ "é"
-sonx ('e':'t':cs) s = sonx cs (s ++ "et")
-sonx ('e':'u':'n':c:cs) s
-    | isVowel c = sonx (c:cs) (s ++ "en")
-    | otherwise = sonx (c:cs) (s ++ "1")
-sonx "eux" s = s ++ "e"
-sonx ('e':'u':'x':'i':cs) s = sonx ('i':cs) (s ++ "ez")
-sonx ('e':'u':cs) s = sonx cs (s ++ "e")
-sonx "ex" s = s ++ "éks"
-sonx ('e':'y':c:cs) s
-    | isConson c = sonx (c:cs) (s ++ "é")
-    | otherwise  = sonx ('y':c:cs) (s ++ "é")
-sonx "ez" s = s ++ "é"
+sonx "e" = ""
+sonx "ec" = "éc"
+sonx "ef" = "éf"
+sonx "eaux" = "o"
+sonx ('e':'a':'n':'n':cs) = 'a':'n':sonx cs
+sonx ('e':'a':'n':cs) = '2':sonx cs
+sonx ('e':'a':'u':cs) = 'o':sonx cs
+sonx ('e':'f':'f':cs) = 'é':'f':sonx cs
+sonx "ein" = "1"
+sonx ('e':'i':'n':c:cs)
+    | c == 'n'  = 'é':'n':sonx cs
+    | isVowel c = 'é':'n':sonx (c:cs)
+    | otherwise = '1':sonx (c:cs)
+sonx ('e':'i':cs) = 'é':sonx cs
+sonx ('e':'l':'l':cs) = 'é':'l':sonx cs
+sonx ('e':'l':c:cs)
+    | isConson c = 'é':sonx ('l':c:cs)
+    | otherwise  = 'e':sonx ('l':c:cs)
+sonx ('e':'m':'m':cs) = 'é':'m':sonx cs
+sonx ('e':'m':'p':cs) = '2':sonx cs
+sonx ('e':'n':'n':cs) = 'é':'n':sonx cs
+sonx "en" = "2"
+sonx ('e':'n':c:cs)
+    | isVowel c = 'e':'n':sonx (c:cs)
+    | otherwise = '2':sonx (c:cs)
+sonx "er" = "é"
+sonx "ert" = "ér"
+sonx ('e':'r':'r':cs) = 'é':'r':sonx cs
+sonx ('e':'r':'f':cs) = 'é':'r':sonx ('f':cs)
+sonx "es" = ""
+sonx ('e':'s':'c':'h':cs) = 'é':'C':sonx cs
+sonx ('e':'s':c:cs)
+    | c == 'h'   = 'é':sonx ('h':cs)
+    | c == 'n'   = 'é':sonx ('n':cs)
+    | c == 's'   = 'é':'s':sonx cs
+    | isConson c = 'é':'s':sonx (c:cs)
+    | otherwise  = 'e':'z':sonx (c:cs)
+sonx ('é':'s':c:cs)
+    | c == 's'   = 'é':'s':sonx cs
+    | isConson c = 'é':'s':sonx (c:cs)
+    | otherwise  = 'é':'z':sonx (c:cs)
+sonx ('e':'t':'t':cs) = 'é':'t':sonx cs
+sonx "et" = "é"
+sonx ('e':'t':cs) = 'e':'t':sonx cs
+sonx ('e':'u':'n':c:cs)
+    | isVowel c = 'e':'n':sonx (c:cs)
+    | otherwise = '1':sonx (c:cs)
+sonx "eux" = "e"
+sonx ('e':'u':'x':'i':cs) = 'e':'z':sonx ('i':cs)
+sonx ('e':'u':cs) = 'e':sonx cs
+sonx "ex" = "éks"
+sonx ('e':'y':c:cs)
+    | isConson c = 'é':sonx (c:cs)
+    | otherwise  = 'é':sonx ('y':c:cs)
+sonx "ez" = "é"
 
-sonx ('è':cs) s = sonx cs (s ++ "é")
-sonx ('ê':cs) s = sonx cs (s ++ "é")
-sonx ('ë':'l':cs) s = sonx ('l':cs) (s ++ "é")
+sonx ('è':cs) = 'é':sonx cs
+sonx ('ê':cs) = 'é':sonx cs
+sonx ('ë':'l':cs) = 'é':sonx ('l':cs)
 
 -- Starting with 'f'
-sonx ('f':'f':cs) s = sonx cs (s ++ "f")
+sonx ('f':'f':cs) = 'f':sonx cs
 
 -- Starting with 'g'
-sonx "g" s = s
-sonx ('g':'e':cs) s = sonx ('e':cs) (s ++ "j")
-sonx ('g':'é':cs) s = sonx ('é':cs) (s ++ "j")
-sonx ('g':'i':cs) s = sonx ('i':cs) (s ++ "j")
-sonx ('g':'n':cs) s = sonx cs (s ++ "n")
-sonx ('g':'y':cs) s = sonx ('y':cs) (s ++ "j")
-sonx ('g':'u':'ë':cs) s = sonx cs (s ++ "gu")
-sonx ('g':'u':cs) s = sonx cs (s ++ "g")
-sonx ('g':'g':cs) s = sonx cs (s ++ "g")
+sonx "g" = ""
+sonx ('g':'e':cs) = 'j':sonx ('e':cs)
+sonx ('g':'é':cs) = 'j':sonx ('é':cs)
+sonx ('g':'i':cs) = 'j':sonx ('i':cs)
+sonx ('g':'n':cs) = 'n':sonx cs
+sonx ('g':'y':cs) = 'j':sonx ('y':cs)
+sonx ('g':'u':'ë':cs) = 'g':'u':sonx cs
+sonx ('g':'u':cs) = 'g':sonx cs
+sonx ('g':'g':cs) = 'g':sonx cs
 
 -- Starting with 'h'
-sonx ('h':cs) s = sonx cs s
+sonx ('h':cs) = sonx cs
 
 -- Starting with 'i'
-sonx "ic" s = s ++ "ik"
-sonx "ics" s = s ++ "ik"
-sonx ('i':'e':'n':'n':cs) s = sonx cs (s ++ "ién")
-sonx ('i':'e':'n':cs) s = sonx cs (s ++ "i1")
-sonx ('i':'n':'n':cs) s = sonx cs (s ++ "in")
-sonx ('i':'n':'e':cs) s = sonx cs (s ++ "in")
-sonx "in" s = s ++ "1"
-sonx ('i':'n':c:cs) s
-    | isVowel c = sonx (c:cs) (s ++ "in")
-    | otherwise = sonx (c:cs) (s ++ "1")
-sonx ('i':'s':c:cs) s
-    | c == 's'   = sonx cs (s ++ "is")
-    | isConson c = sonx (c:cs) (s ++ "is")
-    | otherwise  = sonx (c:cs) (s ++ "iz")
-sonx ('i':'x':'i':cs) s = sonx ('i':cs) (s ++ "iz")
-sonx ('i':'l':'l':cs) s = sonx cs (s ++ "i")
-sonx ('i':cs) s = sonx cs (s ++ "i")
+sonx "ic" = "ik"
+sonx "ics" = "ik"
+sonx ('i':'e':'n':'n':cs) = 'i':'é':'n':sonx cs
+sonx ('i':'e':'n':cs) = 'i':'1':sonx cs
+sonx "in" = "1"
+sonx ('i':'n':c:cs)
+    | c == 'n'  = 'i':'n':sonx cs
+    | isVowel c = 'i':'n':sonx (c:cs)
+    | otherwise = '1':sonx (c:cs)
+sonx ('i':'s':c:cs)
+    | c == 's'   = 'i':'s':sonx cs
+    | isConson c = 'i':'s':sonx (c:cs)
+    | otherwise  = 'i':'z':sonx (c:cs)
+sonx ('i':'x':'i':cs) = 'i':'z':sonx ('i':cs)
+sonx ('i':'l':'l':cs) = 'i':sonx cs
+sonx ('i':cs) = 'i':sonx cs
 
-sonx ('ï':cs) s = sonx cs (s ++ "i")
+sonx ('ï':cs) = 'i':sonx cs
 
 -- Starting with 'l'
-sonx ('l':'l':cs) s = sonx cs (s ++ "l")
+sonx ('l':'l':cs) = 'l':sonx cs
 
 -- Starting with 'm'
-sonx ('m':'m':cs) s = sonx cs (s ++ "m")
+sonx ('m':'m':cs) = 'm':sonx cs
 
 -- Starting with 'n'
-sonx ('n':'n':cs) s = sonx cs (s ++ "n")
+sonx ('n':'n':cs) = 'n':sonx cs
 
 -- Starting with 'o'
-sonx ('o':'c':'c':cs) s = sonx cs (s ++ "ok")
-sonx ('o':'e':'u':cs) s = sonx cs (s ++ "e")
-sonx ('œ':'u':cs) s = sonx cs (s ++ "e")
-sonx ('œ':cs) s = sonx cs (s ++ "e")
-sonx "oient" s = s ++ "Ua"
-sonx ('o':'i':'n':cs) s = sonx cs (s ++ "U1")
-sonx ('o':'i':cs) s = sonx cs (s ++ "Ua")
-sonx ('o':'m':'m':cs) s = sonx cs (s ++ "om")
-sonx ('o':'m':c:cs) s
-    | isVowel c = sonx (c:cs) (s ++ "om")
-    | otherwise = sonx (c:cs) (s ++ "3")
-sonx ('o':'n':'n':cs) s = sonx cs (s ++ "on")
-sonx ('o':'n':cs) s = sonx cs (s ++ "3")
-sonx ('o':'s':c:cs) s
-    | c == 's'   = sonx cs (s ++ "os")
-    | isConson c = sonx (c:cs) (s ++ "os")
-    | otherwise  = sonx (c:cs) (s ++ "oz")
-sonx ('o':'u':cs) s = sonx cs (s ++ "U")
-sonx ('o':'ù':cs) s = sonx cs (s ++ "U")
-sonx ('o':'û':cs) s = sonx cs (s ++ "U")
+sonx ('o':'c':'c':cs) = 'o':'k':sonx cs
+sonx ('o':'e':'u':cs) = 'e':sonx cs
+sonx ('œ':'u':cs) = 'e':sonx cs
+sonx ('œ':cs) = 'e':sonx cs
+sonx "oient" = "Ua"
+sonx ('o':'i':'n':cs) = 'U':'1':sonx cs
+sonx ('o':'i':cs) = 'U':'a':sonx cs
+sonx ('o':'m':'m':cs) = 'o':'m':sonx cs
+sonx ('o':'m':c:cs)
+    | isVowel c = 'o':'m':sonx (c:cs)
+    | otherwise = '3':sonx (c:cs)
+sonx ('o':'n':'n':cs) = 'o':'n':sonx cs
+sonx ('o':'n':cs) = '3':sonx cs
+sonx ('o':'s':c:cs)
+    | c == 's'   = 'o':'s':sonx cs
+    | isConson c = 'o':'s':sonx (c:cs)
+    | otherwise  = 'o':'z':sonx (c:cs)
+sonx ('o':'u':cs) = 'U':sonx cs
+sonx ('o':'ù':cs) = 'U':sonx cs
+sonx ('o':'û':cs) = 'U':sonx cs
 
-sonx ('ô':cs) s = sonx cs (s ++ "o")
-sonx ('ö':cs) s = sonx cs (s ++ "o")
+sonx ('ô':cs) = 'o':sonx cs
+sonx ('ö':cs) = 'o':sonx cs
 
 -- Starting with 'p'
-sonx "p" s = s
-sonx ('p':'h':cs) s = sonx cs (s ++ "f")
-sonx ('p':'p':cs) s = sonx cs (s ++ "p")
-sonx ('p':'a':'y':'s':cs) s = sonx ('i':'s':cs) (s ++ "pé")
+sonx "p" = ""
+sonx ('p':'h':cs) = 'f':sonx cs
+sonx ('p':'p':cs) = 'p':sonx cs
+sonx ('p':'a':'y':'s':cs) = 'p':'é':sonx ('i':'s':cs)
 
 -- Starting with 'q'
-sonx ('q':'u':'r':cs) s = sonx ('r':cs) (s ++ "ku")
-sonx ('q':'u':cs) s = sonx cs (s ++ "k")
-sonx ('q':cs) s = sonx cs (s ++ "k")
+sonx ('q':'u':'r':cs) = 'k':'u':sonx ('r':cs)
+sonx ('q':'u':cs) = 'k':sonx cs
+sonx ('q':cs) = 'k':sonx cs
 
 -- Starting with 'r'
-sonx ('r':'r':cs) s = sonx cs (s ++ "r")
+sonx ('r':'r':cs) = 'r':sonx cs
 
 -- Starting with 's'
-sonx "s" s = s
-sonx ('s':'s':cs) s = sonx cs (s ++ "s")
-sonx ('s':'c':'i':cs) s = sonx ('i':cs) (s ++ "s")
+sonx "s" = ""
+sonx ('s':'s':cs) = 's':sonx cs
+sonx ('s':'c':'i':cs) = 's':sonx ('i':cs)
 
 -- Starting with 't'
-sonx "t" s = s
-sonx ('t':'t':cs) s = sonx cs (s ++ "t")
+sonx "t" = ""
+sonx ('t':'t':cs) = 't':sonx cs
 
 -- Starting with 'u'
-sonx "un" s = s ++ "1"
-sonx ('û':cs) s = sonx cs (s ++ "u")
-sonx ('u':'s':c:cs) s
-    | c == 's'   = sonx cs (s ++ "us")
-    | isConson c = sonx (c:cs) (s ++ "us")
-    | otherwise  = sonx (c:cs) (s ++ "uz")
+sonx "un" = "1"
+sonx ('û':cs) = 'u':sonx cs
+sonx ('u':'s':c:cs)
+    | c == 's'   = 'u':'s':sonx cs
+    | isConson c = 'u':'s':sonx (c:cs)
+    | otherwise  = 'u':'z':sonx (c:cs)
 
 -- Starting with 'v'
 -- 'v' can be handled by the generic case since there is no special thing
 -- about this letter, it’s always pronounced 'v' and never doubled.
 
 -- Starting with 'w'
-sonx ('w':cs) s = sonx cs (s ++ "v")
+sonx ('w':cs) = 'v':sonx cs
 
 -- Starting with 'x'
-sonx "x" s = s
-sonx ('x':'c':cs) s = sonx cs (s ++ "ks")
-sonx ('x':c:cs) s
-    | isVowel c = sonx (c:cs) (s ++ "kz")
-    | otherwise = sonx (c:cs) (s ++ "ks")
+sonx "x" = ""
+sonx ('x':c:cs)
+    | c == 'c'  = 'k':'s':sonx cs
+    | isVowel c = 'k':'z':sonx (c:cs)
+    | otherwise = 'k':'s':sonx (c:cs)
 
 -- Starting with 'y'
-sonx ('y':cs) s = sonx cs (s ++ "i")
+sonx ('y':cs) = 'i':sonx cs
 
 -- Starting with 'z'
-sonx ('z':'z':cs) s = sonx cs (s ++ "z")
+sonx ('z':'z':cs) = 'z':sonx cs
 
 -- Copy every other character as is
-sonx (c:cs) s = sonx cs (s ++ [c])
+sonx (c:cs) = c:sonx cs
 
 -- | Compute a Sonnex code for a french word.
 --
@@ -357,7 +359,7 @@ sonx (c:cs) s = sonx cs (s ++ [c])
 --
 -- prop> length (sonnex w) <= length w
 sonnex :: String -> String
-sonnex word = sonx (map toLower word) ""
+sonnex = sonx . (map toLower)
 
 -- | Compute a Sonnex code for a french phrase.
 --

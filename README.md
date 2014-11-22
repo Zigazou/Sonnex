@@ -5,32 +5,33 @@ Sonnex is an alternative to Soundex for french language
 
 The string must contain only one word.
 The Sonnex code contains the following characters:
-    1 ← un, ein, in, ain
-    2 ← en, an
-    3 ← on
-    a ← a, à, â
-    b ← b, bb
-    C ← ch
-    d ← d, dd
-    e ← e, eu
-    é ← ê, é, è, ai, ei
-    f ← f, ff, ph
-    g ← gu
-    i ← î, i, ille
-    j ← j, ge
-    k ← k, c, qu, ck
-    l ← l, ll
-    m ← m, mm
-    n ← n, nn
-    o ← o, ô
-    p ← p, pp
-    r ← r, rr
-    s ← s, ss
-    t ← t, tt
-    u ← u, ù, û
-    v ← v, w
-    z ← z, s
-    U ← ou
+
+- 1 ← un, ein, in, ain
+- 2 ← en, an
+- 3 ← on
+- a ← a, à, â
+- b ← b, bb
+- C ← ch
+- d ← d, dd
+- e ← e, eu
+- é ← ê, é, è, ai, ei
+- f ← f, ff, ph
+- g ← gu
+- i ← î, i, ille
+- j ← j, ge
+- k ← k, c, qu, ck
+- l ← l, ll
+- m ← m, mm
+- n ← n, nn
+- o ← o, ô
+- p ← p, pp
+- r ← r, rr
+- s ← s, ss
+- t ← t, tt
+- u ← u, ù, û
+- v ← v, w
+- z ← z, s
+- U ← ou
 
 Examples
 --------

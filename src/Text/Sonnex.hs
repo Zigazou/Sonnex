@@ -22,7 +22,7 @@ The Sonnex code contains the following characters:
 - C ← ch
 - d ← d, dd
 - e ← e, eu
-- é ← ê, é, è, ai, ei
+- E ← ê, é, è, ai, ei
 - f ← f, ff, ph
 - g ← gu
 - i ← î, i, ille

@@ -92,6 +92,7 @@ sonx "" = ""
 
 -- Apostroph is ignored/silent
 sonx ('\'':cs) = sonx cs
+sonx ('’':cs) = sonx cs
 
 -- Starting with 'a'
 sonx "a" = "a"
@@ -360,7 +361,16 @@ sonx (c:cs) = c:sonx cs
 --
 -- prop> length (sonnex w) <= length w
 sonnex :: String -> String
-sonnex = sonx . (map toLower)
+sonnex = sonnex' . map toLower
+    where sonnex' "mer" = "mEr"
+          sonnex' "est" = "E"
+          sonnex' "es"  = "E"
+          sonnex' "mes" = "mE"
+          sonnex' "tes" = "tE"
+          sonnex' "ses" = "sE"
+          sonnex' "les" = "lE"
+          sonnex' "de"  = "de"
+          sonnex' word = sonx word
 
 -- | Compute a Sonnex code for a french phrase.
 --
@@ -368,5 +378,5 @@ sonnex = sonx . (map toLower)
 -- Since it uses the words/unwords couple, superfluous space character
 -- are removed.
 sonnexPhrase :: String -> String
-sonnexPhrase phrase = unwords $ map sonnex (words phrase)
+sonnexPhrase = unwords . map sonnex . words
 

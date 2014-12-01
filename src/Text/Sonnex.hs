@@ -119,6 +119,7 @@ sonx ('a':'n':c:cs)
     | c == 'n'  = 'a':'n':sonx cs
     | isVowel c = 'a':'n':sonx (c:cs)
     | otherwise = '2':sonx (c:cs)
+sonx "assent" = "as"
 sonx ('a':'s':c:cs)
     | c == 's'   = 'a':'s':sonx cs
     | isConson c = 'a':'s':sonx (c:cs)
@@ -128,7 +129,9 @@ sonx "ay" = "E"
 sonx "ays" = "E"
 
 sonx ('à':cs) = 'a':sonx cs
-sonx ('â':cs) = 'a':sonx cs
+sonx ('â':c:cs)
+    | c == 't'  = 'a':sonx ('t':cs)
+    | otherwise = 'a':sonx(c:cs)
 
 -- Starting with 'b'
 sonx "b" = ""
@@ -200,6 +203,7 @@ sonx ('e':'r':'r':cs) = 'E':'r':sonx cs
 sonx ('e':'r':'f':cs) = 'E':'r':sonx ('f':cs)
 sonx "es" = ""
 sonx ('e':'s':'c':'h':cs) = 'E':'C':sonx cs
+sonx "essent" = "Es"
 sonx ('e':'s':c:cs)
     | c == 'h'   = 'E':sonx ('h':cs)
     | c == 'n'   = 'E':sonx ('n':cs)
@@ -226,8 +230,15 @@ sonx ('e':'y':c:cs)
 sonx "ez" = "E"
 
 sonx ('è':cs) = 'E':sonx cs
-sonx ('ê':cs) = 'E':sonx cs
+sonx ('ê':c:cs)
+    | c == 't'  = 'E':sonx ('t':cs)
+    | otherwise = 'E':sonx(c:cs)
 sonx ('ë':'l':cs) = 'E':sonx ('l':cs)
+sonx "é" = "E"
+sonx ('é':c:cs)
+    | c == 't'  = 'E':'t':sonx cs
+    | otherwise = 'E':sonx(c:cs)
+
 
 -- Starting with 'f'
 sonx ('f':'f':cs) = 'f':sonx cs
@@ -256,6 +267,7 @@ sonx ('i':'n':c:cs)
     | c == 'n'  = 'i':'n':sonx cs
     | isVowel c = 'i':'n':sonx (c:cs)
     | otherwise = '1':sonx (c:cs)
+sonx "issent" = "is"
 sonx ('i':'s':c:cs)
     | c == 's'   = 'i':'s':sonx cs
     | isConson c = 'i':'s':sonx (c:cs)
@@ -289,6 +301,7 @@ sonx ('o':'m':c:cs)
     | otherwise = '3':sonx (c:cs)
 sonx ('o':'n':'n':cs) = 'o':'n':sonx cs
 sonx ('o':'n':cs) = '3':sonx cs
+sonx "ossent" = "os"
 sonx ('o':'s':c:cs)
     | c == 's'   = 'o':'s':sonx cs
     | isConson c = 'o':'s':sonx (c:cs)
@@ -317,15 +330,19 @@ sonx ('r':'r':cs) = 'r':sonx cs
 -- Starting with 's'
 sonx "s" = ""
 sonx ('s':'s':cs) = 's':sonx cs
+sonx ('s':'t':cs) = 's':'t':sonx cs
 sonx ('s':'c':'i':cs) = 's':sonx ('i':cs)
 
 -- Starting with 't'
 sonx "t" = ""
+sonx ('t':'i':'e':'r':cs) = 't':sonx ('i':'e':'r':cs)
+sonx ('t':'i':cs) = 's':sonx ('i':cs)
 sonx ('t':'t':cs) = 't':sonx cs
 
 -- Starting with 'u'
 sonx "un" = "1"
 sonx ('û':cs) = 'u':sonx cs
+sonx "ussent" = "us"
 sonx ('u':'s':c:cs)
     | c == 's'   = 'u':'s':sonx cs
     | isConson c = 'u':'s':sonx (c:cs)
@@ -362,14 +379,22 @@ sonx (c:cs) = c:sonx cs
 -- prop> length (sonnex w) <= length w
 sonnex :: String -> String
 sonnex = sonnex' . map toLower
-    where sonnex' "mer" = "mEr"
+    where sonnex' "cerf" = "sEr"
+          sonnex' "cerfs" = "sEr"
+          sonnex' "de"  = "de"
           sonnex' "est" = "E"
           sonnex' "es"  = "E"
-          sonnex' "mes" = "mE"
-          sonnex' "tes" = "tE"
-          sonnex' "ses" = "sE"
+          sonnex' "huit" = "uit"
           sonnex' "les" = "lE"
-          sonnex' "de"  = "de"
+          sonnex' "mer" = "mEr"
+          sonnex' "mes" = "mE"
+          sonnex' "ressent" = "res2"
+          sonnex' "serf" = "sEr"
+          sonnex' "serfs" = "sEr"
+          sonnex' ('s':'e':'p':'t':cs) = 's':'E':'t':sonx cs
+          sonnex' "ses" = "sE"
+          sonnex' "tes" = "tE"
+          sonnex' ('t':'i':'e':'n':cs) = 't':sonx ('i':'e':'n':cs)
           sonnex' word = sonx word
 
 -- | Compute a Sonnex code for a french phrase.

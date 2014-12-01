@@ -55,7 +55,7 @@ homonymsList =
     , [ "palais", "palet" ]
     , [ "a", "à" ]
     , [ "au", "aux", "haut" ]
-    --, [ "cerf", "serf", "serre" ]
+    , [ "cerf", "serf", "serre" ]
     , [ "choeur", "chœur", "cœur", "coeur" ]
     , [ "cahos", "chaos" ]
     , [ "ce", "se" ]
@@ -96,6 +96,24 @@ homonymsList =
 
 prop_homonyms = forAll (elements homonymsList) $ \homonyms ->
     allTheSame (map sonnex homonyms)
+
+tests :: [(String, String)]
+tests =
+    [ ("sept", "sEt")
+    , ("septième", "sEtiEm")
+    , ("huit", "uit")
+    , ("potion", "posi3")
+    , ("constitution", "k3stitusi3")
+    , ("chrétien", "krEti1")
+    , ("châtier", "CatiE")
+    , ("tienne", "tiEn")
+    , ("manger", "m2jE")
+    , ("siffler", "siflE")
+    , ("passionnant", "pasion2")
+    ]
+
+prop_tests = forAll (elements tests) $ \(source, result) ->
+    sonnex source == result
 
 return []
 

@@ -110,6 +110,7 @@ tests =
     , ("manger", "m2jE")
     , ("siffler", "siflE")
     , ("passionnant", "pasion2")
+    , ("petit", "peti")
     ]
 
 prop_tests = forAll (elements tests) $ \(source, result) ->

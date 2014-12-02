@@ -117,6 +117,7 @@ sonx ('a':'m':c:cs)
 sonx "an" = "2"
 sonx ('a':'n':c:cs)
     | c == 'n'  = 'a':'n':sonx cs
+    | c == 't'  = '2':'t':sonx cs
     | isVowel c = 'a':'n':sonx (c:cs)
     | otherwise = '2':sonx (c:cs)
 sonx "assent" = "as"
@@ -239,7 +240,6 @@ sonx ('é':c:cs)
     | c == 't'  = 'E':'t':sonx cs
     | otherwise = 'E':sonx(c:cs)
 
-
 -- Starting with 'f'
 sonx ('f':'f':cs) = 'f':sonx cs
 
@@ -336,7 +336,9 @@ sonx ('s':'c':'i':cs) = 's':sonx ('i':cs)
 -- Starting with 't'
 sonx "t" = ""
 sonx ('t':'i':'e':'r':cs) = 't':sonx ('i':'e':'r':cs)
-sonx ('t':'i':cs) = 's':sonx ('i':cs)
+sonx ('t':'i':v:cs)
+    | isVowel v = 's':sonx ('i':v:cs)
+    | otherwise = 't':sonx ('i':v:cs)
 sonx ('t':'t':cs) = 't':sonx cs
 
 -- Starting with 'u'
@@ -391,11 +393,12 @@ sonnex = sonnex' . map toLower
           sonnex' "ressent" = "res2"
           sonnex' "serf" = "sEr"
           sonnex' "serfs" = "sEr"
-          sonnex' ('s':'e':'p':'t':cs) = 's':'E':'t':sonx cs
+          sonnex' "sept" = "sEt"
+          sonnex' "septième" = "sEtiEm"
           sonnex' "ses" = "sE"
           sonnex' "tes" = "tE"
           sonnex' ('t':'i':'e':'n':cs) = 't':sonx ('i':'e':'n':cs)
-          sonnex' word = sonx word
+          sonnex' word = sonx ('^':word)
 
 -- | Compute a Sonnex code for a french phrase.
 --
